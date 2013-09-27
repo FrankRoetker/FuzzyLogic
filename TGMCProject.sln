@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TGMCProject", "TGMCProject\TGMCProject.csproj", "{0EEC4933-88B2-4F2D-8260-5B7EA45193B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "..\TGMCProject\Core\Core.csproj", "{D22A466F-8960-49CC-8DA7-2ACE5411CF7B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{D22A466F-8960-49CC-8DA7-2ACE5411CF7B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
