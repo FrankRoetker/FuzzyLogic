@@ -63,6 +63,10 @@ namespace FuzzyLogic.TGMCProject.Core
             var readChunk = false;
             var st = new StringBuilder();
 
+            var inQuote = false;
+            var quoteCharSeen = '\0';
+            var skipNext = false;
+
             while (!readChunk)
             {
                 // Fill the buffer
@@ -74,9 +78,19 @@ namespace FuzzyLogic.TGMCProject.Core
                     break;
                 }
 
+                if ((inQuote && (char) c != quoteCharSeen) || skipNext)
+                {
+                    skipNext = false;
+                    st.Append((char) c);
+                    continue;
+                }
+
                 switch ((char)c)
                 {
                     case '\r':
+                        break;
+                    case '\\':
+                        skipNext = true;
                         break;
                     case '\n':
                     case '\0':
@@ -85,6 +99,8 @@ namespace FuzzyLogic.TGMCProject.Core
                         break;
                     case '"':
                     case '\'':
+                        quoteCharSeen = (char) c;
+                        inQuote = !inQuote;
                         break;
                     case ',':
                         readChunk = true;

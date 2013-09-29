@@ -52,11 +52,18 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="ExampleTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StreamCSVReaderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{d22a466f-8960-49cc-8da7-2ace5411cf7b}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
