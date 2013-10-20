@@ -114,5 +114,21 @@ namespace FuzzyLogic.TGMCProject.Core
             var converter = TypeDescriptor.GetConverter(typeof (T));
             return st.Length > 0 ? (T) converter.ConvertFromString(st.ToString()) : default(T);
         }
+
+        public List<T> ReadRow<T>() where T : IConvertible
+        {
+            List<T> toReturn = new List<T>();
+
+            if (this.NextRecord())
+            {
+                while (this.HasChunkInRecord())
+                {
+                    var chunk = this.ReadChunk<T>();
+                    toReturn.Add(chunk);
+                }
+            }
+
+            return toReturn;
+        }
     }
 }
