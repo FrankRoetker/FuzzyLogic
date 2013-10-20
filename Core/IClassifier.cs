@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FuzzyLogic.LogisticRegression
+namespace FuzzyLogic.TGMCProject.Core
 {
-    class Program
+    public interface IClassifier
     {
-        static void Main(string[] args)
-        {
-        }
+        void TrainClassifier(StreamCSVReader reader);
     }
 }
