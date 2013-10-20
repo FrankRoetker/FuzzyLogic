@@ -37,13 +37,33 @@ namespace FuzzyLogic.TGMCProject.Core
 
                 }
 
-                _counts[i][row[i]][Convert.ToInt32(rowClassification)]++;
+                _counts[i][row[i]][rowClassification ? 1 : 0]++;
             }
         }
 
         public int GetCount(int columnIndex, IConvertible value, bool rowClassification)
         {
             return _counts[columnIndex][value][Convert.ToInt32(rowClassification)];
+        }
+
+        public override string ToString()
+        {
+            string toReturn = "";
+
+            for (int i = 0; i < _counts.Count(); i++ )
+            {
+                toReturn += "Column " + i + ":\n[";
+
+                foreach (IConvertible key in _counts[i].Keys)
+                {
+                    int[] val = _counts[i][key];
+                    toReturn += "\t[" + key + " [" + val[0] + ", " + val[1] +"]]\n";
+                }
+
+                toReturn += "]\n";
+            }
+
+            return toReturn;
         }
     }
 }

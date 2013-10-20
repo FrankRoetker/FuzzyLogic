@@ -20,15 +20,23 @@ namespace FuzzyLogic.LogisticRegression
         {
             while (reader.NextRecord())
             {
-                int questionId, answerId;
+                float questionId, answerId;
                 IList<float> features;
                 bool isCorrect;
 
-                reader.GetTGMCRow(true, out questionId, out answerId, out features, 
-                    out isCorrect);
+                if (!reader.GetTGMCRow(true, out questionId, out answerId, out features, 
+                    out isCorrect))
+                {
+                    Console.Out.WriteLine("Didn't read row correctly! :(");
+                }
 
                 _trainingData.AddDataRow(features, isCorrect);
             }
+        }
+
+        public override string ToString()
+        {
+            return _trainingData.ToString();
         }
     }
 }

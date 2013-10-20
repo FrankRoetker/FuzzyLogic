@@ -8,7 +8,7 @@ namespace FuzzyLogic.TGMCProject.Core
 {
     public class StreamCSVReader
     {
-        private readonly TextReader _reader;
+        private TextReader _reader;
         private readonly bool _hasHeaders;
         private readonly Stream _inputStream;
         private readonly int _numColumns;
@@ -18,7 +18,7 @@ namespace FuzzyLogic.TGMCProject.Core
         //private int _position = 0;
         //private char[] _buffer;
 
-        public int numColumns
+        public int NumberColumns
         {
             get { return this._numColumns; }
         }
@@ -48,6 +48,7 @@ namespace FuzzyLogic.TGMCProject.Core
             {
                 headerList.Add(ReadChunk<String>());
             }
+
         }
 
         public bool HasChunkInRecord()
@@ -138,6 +139,8 @@ namespace FuzzyLogic.TGMCProject.Core
 
             ResetReader();
 
+            Console.Out.WriteLine("Got {0} columns", toReturn);
+
             return toReturn;
         }
 
@@ -146,6 +149,8 @@ namespace FuzzyLogic.TGMCProject.Core
             _inputStream.Seek(0, SeekOrigin.Begin);
             _hitEof = false;
             _hitEol = false;
+
+            _reader = new StreamReader(_inputStream, true);
 
             if (_hasHeaders) ReadHeader();
         }

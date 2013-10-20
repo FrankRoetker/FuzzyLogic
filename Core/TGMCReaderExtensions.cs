@@ -11,12 +11,12 @@ namespace FuzzyLogic.TGMCProject.Core
     {
         private static IList<StreamCSVReader> _readers = new List<StreamCSVReader>(1);
         private static int _readerLength = -1;
-        public static bool GetTGMCRow(this StreamCSVReader reader, bool isTraining, out int questionId, out int answerId, out IList<float> features, out bool isCorrect) 
+        public static bool GetTGMCRow(this StreamCSVReader reader, bool isTraining, out float questionId, out float answerId, out IList<float> features, out bool isCorrect) 
         {
             if (!_readers.Contains(reader))
             {
                 // Read the length
-                _readerLength = reader.numColumns;
+                _readerLength = reader.NumberColumns;
             }
 
             questionId = -1;
@@ -26,18 +26,27 @@ namespace FuzzyLogic.TGMCProject.Core
 
             if (!reader.NextRecord()) return false;
 
-            questionId = reader.ReadChunk<int>();
-            answerId = reader.ReadChunk<int>();
+            questionId = reader.ReadChunk<float>();
+            reader.HasChunkInRecord();
+            answerId = reader.ReadChunk<float>();
+            reader.HasChunkInRecord();
 
             // Now, read until the end of the features
-            for (int i = 2; (isTraining ? _readerLength - 1 : _readerLength) > i; i++)
+            for (int i = 2; (isTraining ? _readerLength - 1 : _readerLength) > i && reader.HasChunkInRecord(); i++)
             {
                 features.Add(reader.ReadChunk<float>());
             }
 
-            if (isTraining)
+            if (isTraining && reader.HasChunkInRecord())
             {
-                isTraining = reader.ReadChunk<Boolean>();
+                isCorrect = reader.ReadChunk<Boolean>();
+            }
+            else
+            {
+                if (isTraining)
+                {
+                    Console.Out.WriteLine("requested training data but we didn't have a chunk for the row?");
+                }
             }
 
             return true;
