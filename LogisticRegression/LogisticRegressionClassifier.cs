@@ -33,7 +33,12 @@ namespace FuzzyLogic.LogisticRegression
                 _trainingData.AddDataRow(features, isCorrect);
             }
 
-            // TODO logistic regression stuff
+            // TODO Based on data in _trainingData, find the odds of the row being true for each value of each column
+            // Then, populate a MultivariateSample (Metanumerics class) with each row of features against the log odds of the row being true.
+            // Solve it using the LinearRegression method (Metanumerics) specifying the log odds column as the dependent variable.
+
+            // Problem: need to store the entire data set in memory, then append the log odds on each row
+
 
 
         }
