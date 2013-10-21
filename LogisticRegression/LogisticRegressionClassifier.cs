@@ -32,6 +32,10 @@ namespace FuzzyLogic.LogisticRegression
 
                 _trainingData.AddDataRow(features, isCorrect);
             }
+
+            // TODO logistic regression stuff
+
+
         }
 
         public override string ToString()

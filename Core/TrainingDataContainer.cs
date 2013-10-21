@@ -50,9 +50,13 @@ namespace FuzzyLogic.TGMCProject.Core
         {
             string toReturn = "";
 
+            System.Console.WriteLine("Number of columns: " + _counts.Count());
+
             for (int i = 0; i < _counts.Count(); i++ )
             {
                 toReturn += "Column " + i + ":\n[";
+
+                System.Console.WriteLine("Keys in the dictionary for line " + i + ": " + _counts[i].Keys.Count());
 
                 foreach (IConvertible key in _counts[i].Keys)
                 {

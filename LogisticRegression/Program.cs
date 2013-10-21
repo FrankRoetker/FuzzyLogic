@@ -13,7 +13,7 @@ namespace FuzzyLogic.LogisticRegression
         {
             LogisticRegressionClassifier classifier = new LogisticRegressionClassifier();
 
-            StreamCSVReader reader = new StreamCSVReader(new System.IO.FileStream("..\\..\\..\\Datasets\\tinytrain.csv", System.IO.FileMode.Open));
+            StreamCSVReader reader = new StreamCSVReader(new System.IO.FileStream("..\\..\\..\\Datasets\\tgmctrain.csv", System.IO.FileMode.Open));
 
             classifier.TrainClassifier(reader);
 
