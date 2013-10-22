@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace FuzzyLogic.TGMCProject.Core
 {
@@ -12,7 +11,7 @@ namespace FuzzyLogic.TGMCProject.Core
         // getting counts of a particular value in a column
 
         // Maps column index to a map of <value, <countFalse, countTrue>>
-        private IList<Dictionary<IConvertible, int[]>> _counts;
+        private readonly IList<Dictionary<IConvertible, int[]>> _counts;
 
         public TrainingDataContainer()
         {
@@ -23,21 +22,27 @@ namespace FuzzyLogic.TGMCProject.Core
         {
             // Includes all the data it's given - strip the row ID, question ID, and classification yourself
 
-            bool firstRowAdded = _counts.Count() <= 0;
+            var firstRowAdded = !_counts.Any();
 
-            for(int i = 0; i < row.Count(); i++)
+            for(var i = 0; i < row.Count; i++)
             {
                 // If this is the first row to be added, add a dictionary to counts for each row element
-                if(firstRowAdded) _counts.Add(new Dictionary<IConvertible, int[]>());
-                
-                if(!_counts[i].ContainsKey(row[i]))
+                if (firstRowAdded)
+                {
+                    _counts.Add(new Dictionary<IConvertible, int[]>());
+                }
+
+                var dict = _counts[i];
+                var r = row[i];
+
+                if(!dict.ContainsKey(r))
                 {
                     // Add the value of the column as a key if it has not been seen yet
-                    _counts[i][row[i]] = new int[2] {0, 0};
+                    dict[r] = new[] {0, 0};
 
                 }
 
-                _counts[i][row[i]][rowClassification ? 1 : 0]++;
+                dict[r][rowClassification ? 1 : 0]++;
             }
         }
 
@@ -48,26 +53,26 @@ namespace FuzzyLogic.TGMCProject.Core
 
         public override string ToString()
         {
-            string toReturn = "";
+            var builder = new StringBuilder(6*_counts.Count);
+            
+            Console.WriteLine("Number of columns: " + _counts.Count);
 
-            System.Console.WriteLine("Number of columns: " + _counts.Count());
-
-            for (int i = 0; i < _counts.Count(); i++ )
+            for (var i = 0; i < _counts.Count; i++ )
             {
-                toReturn += "Column " + i + ":\n[";
+                builder.AppendFormat("Column {0}:\n[", i);
 
-                System.Console.WriteLine("Keys in the dictionary for line " + i + ": " + _counts[i].Keys.Count());
+                Console.WriteLine("Keys in the dictionary for line " + i + ": " + _counts[i].Keys.Count);
 
-                foreach (IConvertible key in _counts[i].Keys)
+                foreach (var key in _counts[i].Keys)
                 {
-                    int[] val = _counts[i][key];
-                    toReturn += "\t[" + key + " [" + val[0] + ", " + val[1] +"]]\n";
+                    var val = _counts[i][key];
+                    builder.AppendFormat("\t[{0} [{1}, {2}]]\n", key, val[0], val[1]);
                 }
 
-                toReturn += "]\n";
+                builder.Append("]\n");
             }
 
-            return toReturn;
+            return builder.ToString();
         }
     }
 }

@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FuzzyLogic.TGMCProject.Core;
 
-namespace FuzzyLogic.LogisticRegression
+namespace FuzzyLogic.TGMCProject.LogisticRegression
 {
-    class LogisticRegressionClassifier : IClassifier
+    public class LogisticRegressionClassifier : IClassifier
     {
-        private TrainingDataContainer _trainingData;
+        private readonly TrainingDataContainer _trainingData;
 
         public LogisticRegressionClassifier()
         {

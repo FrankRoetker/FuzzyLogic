@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -8,26 +9,32 @@ namespace FuzzyLogic.TGMCProject.Core
 {
     public class StreamCSVReader
     {
-        private TextReader _reader;
+        private StreamReader _reader;
         private readonly bool _hasHeaders;
         private readonly Stream _inputStream;
         private readonly int _numColumns;
 
+        private readonly StringBuilder _builder;
+
         private bool _hitEol;
         private bool _hitEof;
+        private bool _enableQuotes;
         //private int _position = 0;
         //private char[] _buffer;
 
         public int NumberColumns
         {
-            get { return this._numColumns; }
+            get { return _numColumns; }
         }
 
-        public StreamCSVReader(Stream inputStream, bool hasHeaders=false)
+        public StreamCSVReader(Stream inputStream, bool hasHeaders=false, bool enableQuotes=true)
         {
             _hasHeaders = hasHeaders;
+            _enableQuotes = enableQuotes;
+
             _inputStream = inputStream;
             _reader = new StreamReader(inputStream, true);
+            _builder = new StringBuilder(20);
 
             _inputStream.Seek(0, SeekOrigin.Begin);
 
@@ -64,37 +71,35 @@ namespace FuzzyLogic.TGMCProject.Core
             return true;
         }
 
-        /**
-         * Reads a chunk of data and tries to parse it as a specific type
-         */
-        public T ReadChunk<T>() where T : IConvertible
+        // Reads a string as a chunk
+        public String ReadChunkString()
         {
             var readChunk = false;
-            var st = new StringBuilder();
+
+            _builder.Clear();
 
             var inQuote = false;
-            var quoteCharSeen = '\0';
+            var quoteCharSeen = 0;
             var skipNext = false;
 
             while (!readChunk)
             {
-                // Fill the buffer
-                var c = _reader.Read();
-
-                if (c < 0)
+                if (_reader.EndOfStream) 
                 {
                     _hitEof = true;
                     break;
                 }
 
-                if ((inQuote && (char) c != quoteCharSeen) || skipNext)
+                var c = _reader.Read();
+
+                if ((_enableQuotes && (inQuote && c != quoteCharSeen)) || skipNext)
                 {
                     skipNext = false;
-                    st.Append((char) c);
+                    _builder.Append((char)c);
                     continue;
                 }
 
-                switch ((char)c)
+                switch (c)
                 {
                     case '\r':
                         break;
@@ -108,31 +113,81 @@ namespace FuzzyLogic.TGMCProject.Core
                         break;
                     case '"':
                     case '\'':
-                        quoteCharSeen = (char) c;
-                        inQuote = !inQuote;
+                        if (_enableQuotes)
+                        {
+                            quoteCharSeen = c;
+                            inQuote = !inQuote;
+                        }
+                        else
+                        {
+                            _builder.Append((char) c);
+                        }
                         break;
                     case ',':
                         readChunk = true;
                         break;
                     default:
-                        st.Append((char)c);
+                        _builder.Append((char)c);
                         break;
                 }
             }
 
+            return _builder.ToString();
+        }
+
+        public int ReadChunkInt()
+        {
+            var st = ReadChunkString();
+
+            int result;
+
+            int.TryParse(st, out result);
+         
+            return result;
+        }
+
+        public float ReadChunkFloat()
+        {
+            var st = ReadChunkString();
+
+            float result;
+
+            float.TryParse(st, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out result);
+
+            return result;
+        }
+
+        public bool ReadChunkBoolean()
+        {
+            var st = ReadChunkString();
+
+            bool result;
+
+            bool.TryParse(st, out result);
+
+            return result;
+        }
+
+        /**
+         * Reads a chunk of data and tries to parse it as a specific type
+         */
+        public T ReadChunk<T>() where T : IConvertible
+        {
+            var st = ReadChunkString();
+
             var converter = TypeDescriptor.GetConverter(typeof (T));
-            return st.Length > 0 ? (T) converter.ConvertFromString(st.ToString()) : default(T);
+            return st.Length > 0 ? (T) converter.ConvertFromString(st) : default(T);
         }
 
         private int GetNumColumns()
         {
-            int toReturn = 0;
+            var toReturn = 0;
 
-            if (this.NextRecord())
+            if (NextRecord())
             {
-                while (this.HasChunkInRecord())
+                while (HasChunkInRecord())
                 {
-                    var chunk = this.ReadChunk<String>();
+                    ReadChunk<String>();
                     toReturn++;
                 }
             }

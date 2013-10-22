@@ -45,7 +45,7 @@ namespace FuzzyLogic.UnitTests
 
             for (var column = 0; column < 3; column++)
             {
-                Assert.AreEqual(reader.ReadChunk<String>(), expectedStrings[column]);
+                Assert.AreEqual(expectedStrings[column], reader.ReadChunk<String>());
             }
         }
 
@@ -59,7 +59,7 @@ namespace FuzzyLogic.UnitTests
 
             for (var column = 0; column < 3; column++)
             {
-                Assert.AreEqual(reader.ReadChunk<String>(), expectedStrings[column]);
+                Assert.AreEqual(expectedStrings[column], reader.ReadChunk<String>());
             }
 
             Assert.IsFalse(reader.HasChunkInRecord());
@@ -76,7 +76,7 @@ namespace FuzzyLogic.UnitTests
 
             for (var column = 0; column < 4; column++)
             {
-                Assert.AreEqual(reader.ReadChunk<String>(), expectedStrings[column]);
+                Assert.AreEqual(expectedStrings[column], reader.ReadChunk<String>());
             }
 
             Assert.IsFalse(reader.HasChunkInRecord());
