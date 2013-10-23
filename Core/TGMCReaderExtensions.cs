@@ -16,9 +16,9 @@ namespace FuzzyLogic.TGMCProject.Core
             if (!reader.NextRecord()) return false;
 
             questionId = reader.ReadChunkFloat();
-            reader.HasChunkInRecord();
+            if (!reader.HasChunkInRecord()) return false;
             answerId = reader.ReadChunkFloat();
-            reader.HasChunkInRecord();
+            if (!reader.HasChunkInRecord()) return false;
 
             // Now, read until the end of the features
             for (var i = 2; (isTraining ? reader.NumberColumns - 1 : reader.NumberColumns) > i && reader.HasChunkInRecord(); i++)

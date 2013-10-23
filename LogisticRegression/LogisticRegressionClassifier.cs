@@ -59,6 +59,8 @@ namespace FuzzyLogic.TGMCProject.LogisticRegression
                 currentRow[sample.Dimension -1] = Math.Log(combinedOdds);
             }
 
+            Console.WriteLine("sample: {0}, dimension: {1}", sample, sample.Dimension);
+
             // Solve it specifying the log odds column as the dependent variable
             _model = sample.LinearRegression(sample.Dimension - 1);
         }
