@@ -157,6 +157,17 @@ namespace FuzzyLogic.TGMCProject.Core
             return result;
         }
 
+        public double ReadChunkDouble()
+        {
+            var st = ReadChunkString();
+
+            float result;
+
+            float.TryParse(st, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out result);
+
+            return result;
+        }
+
         public bool ReadChunkBoolean()
         {
             var st = ReadChunkString();

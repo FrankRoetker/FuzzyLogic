@@ -18,7 +18,7 @@ namespace FuzzyLogic.TGMCProject.Core
             _counts = new List<Dictionary<IConvertible, int[]>>();
         }
 
-        public void AddDataRow(IList<float> row, bool rowClassification)
+        public void AddDataRow(IList<double> row, bool rowClassification)
         {
             // Includes all the data it's given - strip the row ID, question ID, and classification yourself
 
@@ -49,6 +49,12 @@ namespace FuzzyLogic.TGMCProject.Core
         public int GetCount(int columnIndex, IConvertible value, bool rowClassification)
         {
             return _counts[columnIndex][value][Convert.ToInt32(rowClassification)];
+        }
+
+        public float GetOddsOfTrue(int columnIndex, IConvertible value)
+        {
+            int[] FTcounts = _counts[columnIndex][value];
+            return FTcounts[1] / FTcounts[0];
         }
 
         public override string ToString()

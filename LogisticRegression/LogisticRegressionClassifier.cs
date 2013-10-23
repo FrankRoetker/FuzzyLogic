@@ -1,42 +1,72 @@
 ﻿using System;
 using System.Collections.Generic;
 using FuzzyLogic.TGMCProject.Core;
+using Meta.Numerics.Statistics;
 
 namespace FuzzyLogic.TGMCProject.LogisticRegression
 {
     public class LogisticRegressionClassifier : IClassifier
     {
         private readonly TrainingDataContainer _trainingData;
+        private FitResult model;
 
         public LogisticRegressionClassifier()
         {
             _trainingData = new TrainingDataContainer();
+            FitResult model = null; // Only have a fitresult after training
         }
 
         public void TrainClassifier(StreamCSVReader reader)
         {
+            // Dispense with all the training data after training, keep only the model
+            MultivariateSample sample = new MultivariateSample(reader.NumberColumns - 2);
+
             while (reader.NextRecord())
             {
                 float questionId, answerId;
-                IList<float> features;
+                IList<double> features;
                 bool isCorrect;
 
                 if (!reader.GetTGMCRow(true, out questionId, out answerId, out features, 
                     out isCorrect))
                 {
                     Console.Out.WriteLine("Didn't read row correctly! :(");
+                    continue;
+                }
+
+                if (features.Count != 318)
+                {
+                    //
+                    System.Console.WriteLine("Beep");
                 }
 
                 _trainingData.AddDataRow(features, isCorrect);
+
+                features.Add(0); // add an extra space for the probability for later
+
+                sample.Add(features);
+
             }
 
-            // TODO Based on data in _trainingData, find the odds of the row being true for each value of each column
-            // Then, populate a MultivariateSample (Metanumerics class) with each row of features against the log odds of the row being true.
-            // Solve it using the LinearRegression method (Metanumerics) specifying the log odds column as the dependent variable.
+            // Populate the multivariatesample with the log odds in the last column of each row
+            foreach (Double[] currentRow in sample)
+            {
+                Double combinedOdds = 1;
 
-            // Problem: need to store the entire data set in memory, then append the log odds on each row
+                // Get the odds for the row by multiplying the odds for each column together. Skip the last column
+                for (int i = 0; i < sample.Dimension - 2; i++)
+                {
+                    Double val = currentRow[i];
 
+                    combinedOdds *= _trainingData.GetOddsOfTrue(i + 2, val);
+                }
 
+                // Set the last column to the log odds
+                currentRow[sample.Dimension -1] = Math.Log(combinedOdds);
+            }
+
+            // Solve it specifying the log odds column as the dependent variable
+            sample.LinearRegression(sample.Dimension - 1);
 
         }
 

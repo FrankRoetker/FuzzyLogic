@@ -6,11 +6,11 @@ namespace FuzzyLogic.TGMCProject.Core
     // Provides specialized methods for parsing TGMC data, allowing for fixed row length
     public static class TGMCReaderExtensions
     {
-        public static bool GetTGMCRow(this StreamCSVReader reader, bool isTraining, out float questionId, out float answerId, out IList<float> features, out bool isCorrect) 
+        public static bool GetTGMCRow(this StreamCSVReader reader, bool isTraining, out float questionId, out float answerId, out IList<double> features, out bool isCorrect) 
         {
             questionId = -1;
             answerId = -1;
-            features = new List<float>(reader.NumberColumns);
+            features = new List<double>(reader.NumberColumns);
             isCorrect = false;
 
             if (!reader.NextRecord()) return false;
