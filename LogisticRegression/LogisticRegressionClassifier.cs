@@ -50,25 +50,26 @@ namespace FuzzyLogic.TGMCProject.LogisticRegression
             System.Console.WriteLine("Begin calculating log odds...");
             foreach (Double[] currentRow in sample)
             {
-                Double combinedOdds = 1;
-
+                Double combinedProb = 1;
+                
                 // Get the odds for the row by multiplying the odds for each column together. Skip the last column
                 for (var i = 0; i < sample.Dimension - 2; i++)
                 {
                     var val = currentRow[i];
 
                     //combinedOdds *= _trainingData.GetOddsOfTrue(i + 2, val);
-                    var odds =  _trainingData.GetOddsOfTrue(i, val);
-                    if (odds == 0)
+                    var prob =  _trainingData.GetProbabilityOfTrue(i, val);
+                    if (prob <= 0.00000001)
                     {
                         System.Console.WriteLine("Odds are 0");
                     }
-                    combinedOdds *= odds;
+                    combinedProb *= prob;
+                    //System.Console.WriteLine("Prob is {0}, combined {1}", prob, combinedProb);
                 }
 
                 // Set the last column to the log odds
-                System.Console.WriteLine("Combined odds: {0}, log odds: {1}", combinedOdds, Math.Log(combinedOdds));
-                currentRow[sample.Dimension -1] = Math.Log(combinedOdds);
+                //System.Console.WriteLine("Combined prob: {0}, log odds: {1}", combinedProb, Math.Log((combinedProb) / (1 - combinedProb)));
+                currentRow[sample.Dimension - 1] = Math.Log((combinedProb) / (1 - combinedProb));
             }
             System.Console.WriteLine("Finished calculating log odds.");
 
@@ -84,7 +85,8 @@ namespace FuzzyLogic.TGMCProject.LogisticRegression
         
         public override string ToString()
         {
-            return _trainingData.ToString();
+            return "";
+            //return _trainingData.ToString();
         }
         
     }
