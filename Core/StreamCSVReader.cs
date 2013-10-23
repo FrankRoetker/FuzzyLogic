@@ -141,7 +141,11 @@ namespace FuzzyLogic.TGMCProject.Core
 
             int result;
 
-            int.TryParse(st, out result);
+            if (!int.TryParse(st, out result))
+            {
+                Console.WriteLine("failed to parse int value: {0}", st);
+                return default(int);
+            }
          
             return result;
         }
@@ -152,7 +156,11 @@ namespace FuzzyLogic.TGMCProject.Core
 
             float result;
 
-            float.TryParse(st, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out result);
+            if (!float.TryParse(st, NumberStyles.AllowDecimalPoint | NumberStyles.AllowExponent | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out result))
+            {
+                Console.WriteLine("failed to parse float value: {0}", st);
+                return default(float);
+            }
 
             return result;
         }
@@ -163,7 +171,11 @@ namespace FuzzyLogic.TGMCProject.Core
 
             float result;
 
-            float.TryParse(st, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out result);
+            if (!float.TryParse(st, NumberStyles.AllowDecimalPoint | NumberStyles.AllowExponent | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out result))
+            {
+                Console.WriteLine("failed to parse double value: {0}", st);
+                return default(double);
+            }
 
             return result;
         }

@@ -66,6 +66,8 @@ namespace FuzzyLogic.TGMCProject.LogisticRegression
             }
             System.Console.WriteLine("Finished calculating log odds.");
 
+            Console.WriteLine("sample: {0}, dimension: {1}", sample, sample.Dimension);
+
             // Solve it specifying the log odds column as the dependent variable
 
             System.Console.WriteLine("Begin linear regression on log odds...");
