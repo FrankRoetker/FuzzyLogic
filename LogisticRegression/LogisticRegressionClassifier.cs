@@ -58,10 +58,16 @@ namespace FuzzyLogic.TGMCProject.LogisticRegression
                     var val = currentRow[i];
 
                     //combinedOdds *= _trainingData.GetOddsOfTrue(i + 2, val);
-                    combinedOdds *= _trainingData.GetOddsOfTrue(i, val);
+                    var odds =  _trainingData.GetOddsOfTrue(i, val);
+                    if (odds == 0)
+                    {
+                        System.Console.WriteLine("Odds are 0");
+                    }
+                    combinedOdds *= odds;
                 }
 
                 // Set the last column to the log odds
+                System.Console.WriteLine("Combined odds: {0}, log odds: {1}", combinedOdds, Math.Log(combinedOdds));
                 currentRow[sample.Dimension -1] = Math.Log(combinedOdds);
             }
             System.Console.WriteLine("Finished calculating log odds.");
@@ -75,9 +81,11 @@ namespace FuzzyLogic.TGMCProject.LogisticRegression
             System.Console.WriteLine("Finished linear regression on log odds.");
         }
 
+        
         public override string ToString()
         {
             return _trainingData.ToString();
         }
+        
     }
 }

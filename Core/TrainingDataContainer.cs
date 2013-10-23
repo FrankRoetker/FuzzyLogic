@@ -56,7 +56,7 @@ namespace FuzzyLogic.TGMCProject.Core
             if (_counts.Count >= columnIndex && _counts[columnIndex].ContainsKey(value))
             {
                 var FTcounts = _counts[columnIndex][value];
-                return (float) FTcounts[1]/FTcounts[0];
+                return (float) (FTcounts[1] + 1)/(FTcounts[0] + 1);
             }
 
             return 0.001f;
