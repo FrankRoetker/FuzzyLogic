@@ -8,12 +8,11 @@ namespace FuzzyLogic.TGMCProject.LogisticRegression
     public class LogisticRegressionClassifier : IClassifier
     {
         private readonly TrainingDataContainer _trainingData;
-        private FitResult model;
+        private FitResult _model;
 
         public LogisticRegressionClassifier()
         {
             _trainingData = new TrainingDataContainer();
-            FitResult model = null; // Only have a fitresult after training
         }
 
         public void TrainClassifier(StreamCSVReader reader)
@@ -32,12 +31,6 @@ namespace FuzzyLogic.TGMCProject.LogisticRegression
                 {
                     Console.Out.WriteLine("Didn't read row correctly! :(");
                     continue;
-                }
-
-                if (features.Count != 318)
-                {
-                    //
-                    Console.WriteLine("Beep");
                 }
 
                 _trainingData.AddDataRow(features, isCorrect);
@@ -67,8 +60,7 @@ namespace FuzzyLogic.TGMCProject.LogisticRegression
             }
 
             // Solve it specifying the log odds column as the dependent variable
-            sample.LinearRegression(sample.Dimension - 1);
-
+            _model = sample.LinearRegression(sample.Dimension - 1);
         }
 
         public override string ToString()
