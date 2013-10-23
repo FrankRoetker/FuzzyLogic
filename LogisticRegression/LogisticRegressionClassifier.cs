@@ -19,7 +19,7 @@ namespace FuzzyLogic.TGMCProject.LogisticRegression
         public void TrainClassifier(StreamCSVReader reader)
         {
             // Dispense with all the training data after training, keep only the model
-            MultivariateSample sample = new MultivariateSample(reader.NumberColumns - 2);
+            var sample = new MultivariateSample(reader.NumberColumns - 2);
 
             while (reader.NextRecord())
             {
@@ -37,7 +37,7 @@ namespace FuzzyLogic.TGMCProject.LogisticRegression
                 if (features.Count != 318)
                 {
                     //
-                    System.Console.WriteLine("Beep");
+                    Console.WriteLine("Beep");
                 }
 
                 _trainingData.AddDataRow(features, isCorrect);
@@ -54,11 +54,12 @@ namespace FuzzyLogic.TGMCProject.LogisticRegression
                 Double combinedOdds = 1;
 
                 // Get the odds for the row by multiplying the odds for each column together. Skip the last column
-                for (int i = 0; i < sample.Dimension - 2; i++)
+                for (var i = 0; i < sample.Dimension - 2; i++)
                 {
-                    Double val = currentRow[i];
+                    var val = currentRow[i];
 
-                    combinedOdds *= _trainingData.GetOddsOfTrue(i + 2, val);
+                    //combinedOdds *= _trainingData.GetOddsOfTrue(i + 2, val);
+                    combinedOdds *= _trainingData.GetOddsOfTrue(i, val);
                 }
 
                 // Set the last column to the log odds

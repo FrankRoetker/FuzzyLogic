@@ -35,10 +35,11 @@ namespace FuzzyLogic.TGMCProject.Core
                 if (isTraining)
                 {
                     Console.Out.WriteLine("requested training data but we didn't have a chunk for the row?");
+                    return false;
                 }
             }
 
-            return true;
+            return features.Count == (isTraining ? reader.NumberColumns - 1 : reader.NumberColumns) - 2;
         }
     }
 }

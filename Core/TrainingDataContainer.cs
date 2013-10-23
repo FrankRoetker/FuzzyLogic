@@ -53,8 +53,13 @@ namespace FuzzyLogic.TGMCProject.Core
 
         public float GetOddsOfTrue(int columnIndex, IConvertible value)
         {
-            int[] FTcounts = _counts[columnIndex][value];
-            return FTcounts[1] / FTcounts[0];
+            if (_counts.Count >= columnIndex && _counts[columnIndex].ContainsKey(value))
+            {
+                var FTcounts = _counts[columnIndex][value];
+                return (float) FTcounts[1]/FTcounts[0];
+            }
+
+            return 0.001f;
         }
 
         public override string ToString()
