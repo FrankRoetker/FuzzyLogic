@@ -10,7 +10,7 @@ namespace FuzzyLogic.TGMCProject
         {
             var classifier = new LogisticRegressionClassifier();
 
-            var reader = new StreamCSVReader(new System.IO.FileStream("..\\..\\..\\Datasets\\tgmctrain.csv", System.IO.FileMode.Open), enableQuotes:false);
+            var reader = new StreamCSVReader(new System.IO.FileStream("..\\..\\..\\Datasets\\q1repeatedtrain.csv", System.IO.FileMode.Open), enableQuotes:false);
 
             classifier.TrainClassifier(reader);
 

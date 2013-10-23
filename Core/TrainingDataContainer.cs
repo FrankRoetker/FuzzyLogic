@@ -20,7 +20,7 @@ namespace FuzzyLogic.TGMCProject.Core
 
         public void AddDataRow(IList<double> row, bool rowClassification)
         {
-            // Includes all the data it's given - strip the row ID, question ID, and classification yourself
+            // Includes all the data it's given - strip the row ID, question ID, and classification yourself before passing it in
 
             var firstRowAdded = !_counts.Any();
 
