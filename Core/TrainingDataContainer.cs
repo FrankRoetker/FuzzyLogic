@@ -62,12 +62,12 @@ namespace FuzzyLogic.TGMCProject.Core
             return 0.001f;
         }
 
-        public float GetProbabilityOfTrue(int columnIndex, IConvertible value)
+        public double GetProbabilityOfTrue(int columnIndex, IConvertible value)
         {
             if (_counts.Count >= columnIndex && _counts[columnIndex].ContainsKey(value))
             {
                 var FTcounts = _counts[columnIndex][value];
-                return (float)(FTcounts[1] + 1) / (FTcounts[0] + FTcounts[1] + 1);
+                return (double)(FTcounts[1] + 1) / (FTcounts[0] + FTcounts[1] + 1);
             }
 
             return 0.001f;

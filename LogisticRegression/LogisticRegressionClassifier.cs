@@ -17,12 +17,12 @@ namespace FuzzyLogic.TGMCProject.LogisticRegression
 
         public void TrainClassifier(StreamCSVReader reader)
         {
-            System.Console.WriteLine("Begin training...");
+            Console.WriteLine("Begin training...");
             // Dispense with all the training data after training, keep only the model
-            System.Console.WriteLine("Creating a MultivariateSample with " + (reader.NumberColumns - 2) + " entries per row.");
+            Console.WriteLine("Creating a MultivariateSample with " + (reader.NumberColumns - 2) + " entries per row.");
             var sample = new MultivariateSample(reader.NumberColumns - 2);
 
-            System.Console.WriteLine("Begin reading data...");
+            Console.WriteLine("Begin reading data...");
             while (reader.NextRecord())
             {
                 float questionId, answerId;
@@ -39,18 +39,18 @@ namespace FuzzyLogic.TGMCProject.LogisticRegression
                 _trainingData.AddDataRow(features, isCorrect);
 
                 features.Add(0); // add an extra space for the probability for later
-                if (features.Count != reader.NumberColumns - 2) System.Console.WriteLine("Warning: row only has " + features.Count + " entries per row.");
+                if (features.Count != reader.NumberColumns - 2) Console.WriteLine("Warning: row only has " + features.Count + " entries per row.");
 
                 sample.Add(features);
 
             }
-            System.Console.WriteLine("Finished reading data.");
+            Console.WriteLine("Finished reading data.");
 
             // Populate the multivariatesample with the log odds in the last column of each row
-            System.Console.WriteLine("Begin calculating log odds...");
-            foreach (Double[] currentRow in sample)
+            Console.WriteLine("Begin calculating log odds...");
+            foreach (var currentRow in sample)
             {
-                Double combinedProb = 1;
+                double combinedProb = 1;
                 
                 // Get the odds for the row by multiplying the odds for each column together. Skip the last column
                 for (var i = 0; i < sample.Dimension - 2; i++)
@@ -58,28 +58,28 @@ namespace FuzzyLogic.TGMCProject.LogisticRegression
                     var val = currentRow[i];
 
                     //combinedOdds *= _trainingData.GetOddsOfTrue(i + 2, val);
-                    var prob =  _trainingData.GetProbabilityOfTrue(i, val);
-                    if (prob <= 0.00000001)
-                    {
-                        System.Console.WriteLine("Odds are 0");
-                    }
+                    var prob =  _trainingData.GetProbabilityOfTrue(i, val) + 0.5;
+                    //if (prob <= 0.001 || combinedProb <= 0.00000000000000000001)
+                    //{
+                     //   Console.WriteLine("Odds are 0");
+                    //}
                     combinedProb *= prob;
-                    //System.Console.WriteLine("Prob is {0}, combined {1}", prob, combinedProb);
                 }
 
                 // Set the last column to the log odds
-                //System.Console.WriteLine("Combined prob: {0}, log odds: {1}", combinedProb, Math.Log((combinedProb) / (1 - combinedProb)));
+                System.Console.WriteLine("Combined prob: {0}, log odds: {1}", combinedProb, Math.Log((combinedProb) / (1 - combinedProb)));
                 currentRow[sample.Dimension - 1] = Math.Log((combinedProb) / (1 - combinedProb));
             }
-            System.Console.WriteLine("Finished calculating log odds.");
+            Console.WriteLine("Finished calculating log odds.");
 
             Console.WriteLine("sample: {0}, dimension: {1}", sample, sample.Dimension);
 
             // Solve it specifying the log odds column as the dependent variable
 
-            System.Console.WriteLine("Begin linear regression on log odds...");
+            
+            Console.WriteLine("Begin linear regression on log odds...");
             _model = sample.LinearRegression(sample.Dimension - 1);
-            System.Console.WriteLine("Finished linear regression on log odds.");
+            Console.WriteLine("Finished linear regression on log odds.");
         }
 
         
