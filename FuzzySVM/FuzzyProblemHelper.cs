@@ -25,22 +25,21 @@ namespace FuzzySVM
 
                     var st = line.Split(',').Where(c => c != String.Empty).ToArray();
 
-                    //vy.Add(atof(st[0]));
-                    if(testing) vy.Add(atof(st[-1]));
-                    else vy.Add(0.0); //we need to be sure about this.
+                    vy.Add(testing ? atob(st[st.Length - 1]) : 0.0);
 
-
-                    var m = (st.Count() - (testing ? 2 : 3));
+                    var m = (st.Count() - (testing ? 3 : 2));
                     var x = new List<svm_node>();
                     for (var i = 0; i < m; i++)
                     {
                         var value = double.Parse(st[i + 2].Trim());
-                        x.Add(new svm_node()
-                        {
-                            index = i,
-                            value = value,
-                        });
 
+                        //we only want to add the values that are non-zero
+                        if (!value.Equals(0.0))
+                            x.Add(new svm_node()
+                            {
+                                index = i + 1,
+                                value = value,
+                            });
                     }
                     vx.Add(x.ToArray());
                 }
@@ -104,9 +103,9 @@ namespace FuzzySVM
             return scaledProb;
         }
 
-        public static svm_problem ReadAndScaleProblem(string input_file_name, double lower = -1.0, double upper = 1.0)
+        public static svm_problem ReadAndScaleProblem(string input_file_name, double lower = -1.0, double upper = 1.0, bool testing = true)
         {
-            return ScaleProblem(ReadProblem(input_file_name), lower, upper);
+            return ScaleProblem(ReadProblem(input_file_name, testing), lower, upper);
         }
 
         public static void WriteProblem(string output_file_name, svm_problem problem)
@@ -144,6 +143,10 @@ namespace FuzzySVM
         public static double atod(String s)
         {
             return Double.Parse(s, usCulture);
+        }
+        public static double atob(String s)
+        {
+            return Boolean.Parse(s) ? 1.0 : 0.0;
         }
         private static CultureInfo usCulture = new CultureInfo("en-US");
     }

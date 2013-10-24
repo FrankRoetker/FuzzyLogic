@@ -4,23 +4,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FuzzyLogic.TGMCProject.Core;
+using FuzzySVM;
 using libsvm;
 
 namespace FuzzyLogic.TGMCProject.FuzzySVM
 {
-    class SVM
+    public class SVM
     {
         public const double FEATURES = 300.0;
 
-        public void SvmSolver(string trainingFile, string testFile)
-        {
-            var prob = ProblemHelper.ReadAndScaleProblem(trainingFile);
-            var test = ProblemHelper.ReadAndScaleProblem(testFile);
+        private svm_problem prob;
+        private svm_problem test;
 
+        public SVM(string trainingFile, string testFile)
+        {
+            prob = FuzzyProblemHelper.ReadAndScaleProblem(trainingFile);
+            test = FuzzyProblemHelper.ReadAndScaleProblem(testFile, testing: false);
+        }
+
+        public void SvmSolver()
+        {
             //double gamma = width parameter
             //double C = Cost parameter
             //int nr_fold = ??
-            double gamma = 1;
+            double gamma = 1.0;
             double C = 1.0/FEATURES;
 
 

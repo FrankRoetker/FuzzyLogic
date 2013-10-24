@@ -45,6 +45,10 @@
       <Project>{d22a466f-8960-49cc-8da7-2ace5411cf7b}</Project>
       <Name>Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FuzzySVM\FuzzySVM.csproj">
+      <Project>{552787df-af3d-4249-8b36-2cfbdb9e0ed7}</Project>
+      <Name>FuzzySVM</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LogisticRegression\LogisticRegression.csproj">
       <Project>{fd5132c4-f4e2-4114-b87b-9894326759a2}</Project>
       <Name>LogisticRegression</Name>
