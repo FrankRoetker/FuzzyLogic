@@ -5,7 +5,7 @@ using System.Linq;
 using FuzzyLogic.TGMCProject.AccordLogisticRegression;
 using FuzzyLogic.TGMCProject.Core;
 using FuzzyLogic.TGMCProject.LogisticRegression;
-using FuzzyLogic.TGMCProject.NeuralNetworks;
+using FuzzyLogic.TGMCProject.FuzzySVM;
 
 namespace FuzzyLogic.TGMCProject
 {
@@ -59,6 +59,16 @@ namespace FuzzyLogic.TGMCProject
                 var data = evaluationData[i];
                 data.IsCorrect = classifier.ClassifyRow(data.Features, out data.Confidence);
             }
+
+            var svm = new SVM("..\\..\\..\\Datasets\\q1train.csv", "..\\..\\..\\Datasets\\tgmcevaluation.csv");
+            svm.SvmSolver();
+
+            System.Threading.Thread.Sleep(100000000);
+
+            //Console.WriteLine(classifier);
+
+            // Wait for user input before closing the console window...
+            //Console.ReadLine();
         }
     }
 }

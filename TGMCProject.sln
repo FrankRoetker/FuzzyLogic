@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TGMCProject", "TGMCProject\TGMCProject.csproj", "{0EEC4933-88B2-4F2D-8260-5B7EA45193B5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{552787DF-AF3D-4249-8B36-2CFBDB9E0ED7} = {552787DF-AF3D-4249-8B36-2CFBDB9E0ED7}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{D22A466F-8960-49CC-8DA7-2ACE5411CF7B}"
 EndProject
@@ -16,11 +19,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B0C5F7
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+<<<<<<< HEAD
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuralNetworks", "NeuralNetworks\NeuralNetworks.csproj", "{CDF44F9B-1582-44A5-BD33-11C76D7FD684}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DecisionTrees", "DecisionTrees\DecisionTrees.csproj", "{C7F485F6-57FE-4C66-B1C9-B3DA104031DA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccordLogisticRegression", "AccordLogisticRegression\AccordLogisticRegression.csproj", "{E77077D4-211D-4048-B6B3-D8C8A926686D}"
+=======
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FuzzySVM", "FuzzySVM\FuzzySVM.csproj", "{552787DF-AF3D-4249-8B36-2CFBDB9E0ED7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D22A466F-8960-49CC-8DA7-2ACE5411CF7B} = {D22A466F-8960-49CC-8DA7-2ACE5411CF7B}
+	EndProjectSection
+>>>>>>> 7e7ecacf1da387174cda00bee73fc405b5a337bc
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,6 +54,7 @@ Global
 		{FD5132C4-F4E2-4114-B87B-9894326759A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD5132C4-F4E2-4114-B87B-9894326759A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD5132C4-F4E2-4114-B87B-9894326759A2}.Release|Any CPU.Build.0 = Release|Any CPU
+<<<<<<< HEAD
 		{CDF44F9B-1582-44A5-BD33-11C76D7FD684}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CDF44F9B-1582-44A5-BD33-11C76D7FD684}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDF44F9B-1582-44A5-BD33-11C76D7FD684}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -56,6 +67,12 @@ Global
 		{E77077D4-211D-4048-B6B3-D8C8A926686D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E77077D4-211D-4048-B6B3-D8C8A926686D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E77077D4-211D-4048-B6B3-D8C8A926686D}.Release|Any CPU.Build.0 = Release|Any CPU
+=======
+		{552787DF-AF3D-4249-8B36-2CFBDB9E0ED7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{552787DF-AF3D-4249-8B36-2CFBDB9E0ED7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{552787DF-AF3D-4249-8B36-2CFBDB9E0ED7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{552787DF-AF3D-4249-8B36-2CFBDB9E0ED7}.Release|Any CPU.Build.0 = Release|Any CPU
+>>>>>>> 7e7ecacf1da387174cda00bee73fc405b5a337bc
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
