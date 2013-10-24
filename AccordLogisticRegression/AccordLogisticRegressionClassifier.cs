@@ -10,7 +10,8 @@ namespace FuzzyLogic.TGMCProject.AccordLogisticRegression
 {
     public class AccordLogisticRegressionClassifier : IClassifier
     {
-        private static int ORACLE_SIZE = 30000; // # of records in each oracle
+        private static int ORACLE_SIZE = 40000; // # of records in each oracle
+        private static int MAX_ORACLES = 4; // # of records in each oracle
 
         public Task<LogisticRegression> StartOracle(int oracle, int numberColumns, IList<double[]> inputs, IList<double[]> outputs)
         {
@@ -56,6 +57,11 @@ namespace FuzzyLogic.TGMCProject.AccordLogisticRegression
             {
                 if (count++ > ORACLE_SIZE)
                 {
+                    if (currentOracle + 1 >= MAX_ORACLES)
+                    {
+                        break;
+                    }
+
                     inputs.Add(new List<double[]>(ORACLE_SIZE));
                     outputs.Add(new List<double[]>(ORACLE_SIZE));
 
