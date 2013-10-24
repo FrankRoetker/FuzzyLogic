@@ -11,8 +11,18 @@ namespace FuzzySVM
 {
     class FuzzyProblemHelper
     {
+        struct temp
+        {
+            public double type;
+            public svm_node[] nodes;
+        }
+
+        private const int SAMPLE = 30;
+
         public static svm_problem ReadProblem(string input_file_name, bool testing = true)
         {
+            var stuff = new List<temp>();
+            var nodes = new List<temp>();
 
             var vy = new List<double>();
             var vx = new List<svm_node[]>();
@@ -25,7 +35,9 @@ namespace FuzzySVM
 
                     var st = line.Split(',').Where(c => c != String.Empty).ToArray();
 
-                    vy.Add(testing ? atob(st[st.Length - 1]) : 0.0);
+                    temp tmp = new temp();
+                    //vy.Add(testing ? atob(st[st.Length - 1]) : 0.0);
+                    tmp.type = testing ? atob(st[st.Length - 1]) : 0.0;
 
                     var m = (st.Count() - (testing ? 3 : 2));
                     var x = new List<svm_node>();
@@ -35,20 +47,34 @@ namespace FuzzySVM
 
                         //we only want to add the values that are non-zero
                         if (!value.Equals(0.0))
-                            x.Add(new svm_node()
+                            x.Add(new svm_node
                             {
                                 index = i + 1,
                                 value = value,
                             });
                     }
-                    vx.Add(x.ToArray());
+                    //vx.Add(x.ToArray());
+                    tmp.nodes = x.ToArray();
+                    stuff.Add(tmp);
                 }
 
             }
-            var prob = new svm_problem();
-            prob.l = vy.Count;
-            prob.x = vx.ToArray();
-            prob.y = vy.ToArray();
+            if (testing)
+            {
+                var rnd = new Random();
+                nodes = stuff.Where(e => e.type.Equals(1.0)).ToList();
+                var negNodes = stuff.Where(e => e.type.Equals(0.0)).OrderBy(e => rnd.Next()).Take(SAMPLE).ToList();
+                nodes.AddRange(negNodes);
+            }
+            else
+            {
+                nodes = stuff;
+            }
+
+            vy = nodes.Select(e => e.type).ToList();
+            vx = nodes.Select(e => e.nodes).ToList();
+
+            var prob = new svm_problem {l = vy.Count, x = vx.ToArray(), y = vy.ToArray()};
 
             return prob;
         }

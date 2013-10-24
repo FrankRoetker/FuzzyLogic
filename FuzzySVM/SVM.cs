@@ -27,7 +27,7 @@ namespace FuzzyLogic.TGMCProject.FuzzySVM
             //double gamma = width parameter
             //double C = Cost parameter
             //int nr_fold = ??
-            double gamma = 1.0;
+            double gamma = 0.5;
             double C = 1.0/FEATURES;
 
 
