@@ -11,6 +11,8 @@
     <AssemblyName>FuzzySVM</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,25 +38,14 @@
     <Reference Include="IKVM.OpenJDK.Util">
       <HintPath>..\packages\libsvm.net.2.0.3\lib\IKVM.OpenJDK.Util.dll</HintPath>
     </Reference>
-    <Reference Include="IKVM.Runtime">
-      <HintPath>..\packages\libsvm.net.2.0.3\lib\IKVM.Runtime.dll</HintPath>
-    </Reference>
     <Reference Include="libsvm">
       <HintPath>..\packages\libsvm.net.2.0.3\lib\libsvm.dll</HintPath>
     </Reference>
     <Reference Include="LIBSVM.NET">
       <HintPath>..\packages\libsvm.net.2.0.3\lib\LIBSVM.NET.dll</HintPath>
     </Reference>
-    <Reference Include="Meta.Numerics">
-      <HintPath>..\packages\Meta.Numerics.2.2.0\lib\Meta.Numerics.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FuzzyProblemHelper.cs" />
@@ -62,15 +53,10 @@
     <Compile Include="SVM.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj">
-      <Project>{d22a466f-8960-49cc-8da7-2ace5411cf7b}</Project>
-      <Name>Core</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

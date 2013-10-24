@@ -58,10 +58,15 @@ namespace FuzzyLogic.TGMCProject
             {
                 var data = evaluationData[i];
                 data.IsCorrect = classifier.ClassifyRow(data.Features, out data.Confidence);
+
+                if (data.IsCorrect)
+                {
+                    Console.Out.WriteLine("CORRECT: {0} ({1})", data.AnswerId, data.Confidence);
+                }
             }
 
-            var svm = new SVM("..\\..\\..\\Datasets\\q1train.csv", "..\\..\\..\\Datasets\\tgmcevaluation.csv");
-            svm.SvmSolver();
+            //var svm = new SVM("..\\..\\..\\Datasets\\q1train.csv", "..\\..\\..\\Datasets\\tgmcevaluation.csv");
+            //svm.SvmSolver();
 
             System.Threading.Thread.Sleep(100000000);
 
