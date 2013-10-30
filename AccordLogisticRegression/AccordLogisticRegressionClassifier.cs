@@ -5,16 +5,25 @@ using System.Threading.Tasks;
 using Accord.Statistics.Models.Regression;
 using Accord.Statistics.Models.Regression.Fitting;
 using FuzzyLogic.TGMCProject.Core;
+using System.IO;
 
 namespace FuzzyLogic.TGMCProject.AccordLogisticRegression
 {
     public class AccordLogisticRegressionClassifier : IClassifier
     {
-        private static int ORACLE_SIZE = 40000; // # of records in each oracle
-        private static int MAX_ORACLES = 4; // # of records in each oracle
+        private static int ORACLE_SIZE = 48000; // # of records in each oracle
+        private static int MAX_ORACLES = 16; // # of records in each oracle
+
+        private static double DELTA_THRESHOLD = 0.01;
+        private static int THRESHOLD_COUNT = 2;
+
+        public IDictionary<int, int> _oracleStatus = new Dictionary<int, int>();
 
         public Task<LogisticRegression> StartOracle(int oracle, int numberColumns, IList<double[]> inputs, IList<double[]> outputs)
         {
+            var input = inputs.ToArray();
+            var output = outputs.ToArray();
+
             return Task.Factory.StartNew(() =>
             {
                 Console.WriteLine("Starting Oracle {0} with {1} rows", oracle, inputs.Count);
@@ -22,21 +31,39 @@ namespace FuzzyLogic.TGMCProject.AccordLogisticRegression
                 var regression = new LogisticRegression(numberColumns);
                 var teacher = new IterativeReweightedLeastSquares(regression);
 
-                var input = inputs.ToArray();
-                var output = outputs.ToArray();
-
+                int thresholdCount = 0;
                 double delta;
                 do
                 {
                     // Perform an iteration
                     delta = teacher.Run(input, output);
-                    Console.Out.WriteLine("Oracle {1} Delta: {0}", delta, oracle);
-                } while (delta > 75);
+
+                    Console.Out.WriteLine("Oracle {1} Delta: {0} (count: {2})", delta, oracle, thresholdCount);
+                } while (ContinueTraining(oracle, delta));
 
                 Console.WriteLine("Oracle {0} done", oracle);
 
                 return regression;
             });
+        }
+
+        /// <summary>
+        /// Returns true if should continue training
+        /// </summary>
+        public bool ContinueTraining(int oracleId, double delta)
+        {
+            lock (_oracleStatus)
+            {
+                bool isAbove = delta > DELTA_THRESHOLD;
+
+                if (!_oracleStatus.ContainsKey(oracleId))
+                    _oracleStatus[oracleId] = 0;
+
+                if (isAbove)
+                    _oracleStatus[oracleId]++;
+
+                return !isAbove || _oracleStatus.Any(pair => pair.Value < THRESHOLD_COUNT);
+            }
         }
 
         public void TrainClassifier(StreamCSVReader reader)
@@ -103,13 +130,21 @@ namespace FuzzyLogic.TGMCProject.AccordLogisticRegression
             Models = tasks.Select(x => x.Result).ToList();
         }
 
-        public bool ClassifyRow(double[] row, out double confidence)
+        public bool ClassifyRow(double[] row, double questionId, double answerId, StreamWriter dataFile, out double confidence)
         {
             var results = Models.Select(x => x.Compute(row)).ToList();
+            results.Sort();
 
             confidence = (double)results.Count(x => Math.Abs(x - 1.0) < 0.005) / results.Count();
 
-            return results.Average() > 0.5;
+            dataFile.Write("{0},{1}", questionId, answerId);
+            foreach (var result in results)
+            {
+                dataFile.Write(",{0}", result);
+            }
+            dataFile.Write("\n");
+
+            return results.Max() > 0.50;
         }
 
         public IList<LogisticRegression> Models { get; set; }

@@ -47,6 +47,10 @@
       <Project>{E77077D4-211D-4048-B6B3-D8C8A926686D}</Project>
       <Name>AccordLogisticRegression</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AccordSVM\AccordSVM.csproj">
+      <Project>{E2186764-2579-4F35-B9C7-631BD33B499D}</Project>
+      <Name>AccordSVM</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Core\Core.csproj">
       <Project>{d22a466f-8960-49cc-8da7-2ace5411cf7b}</Project>
       <Name>Core</Name>

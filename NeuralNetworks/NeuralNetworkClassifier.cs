@@ -62,5 +62,11 @@ namespace FuzzyLogic.TGMCProject.NeuralNetworks
                 runningError = error;
             }
         }
+
+        public bool ClassifyRow(double[] row, out double confidence)
+        {
+            confidence = 0.0;
+            return false; 
+        }
     }
 }
