@@ -78,14 +78,21 @@ namespace FuzzyLogic.TGMCProject
             //var svm = new SVM("..\\..\\..\\Datasets\\q1train.csv", "..\\..\\..\\Datasets\\tgmcevaluation.csv");
             //svm.SvmSolver();
 
+<<<<<<< HEAD
             //System.Threading.Thread.Sleep(100000000);
+=======
+            //System.Threading.Thread.Sleep(1000000000);
+>>>>>>> bc95e715fe2846617ecdad54daa282f84d9fb508
 
             //Console.WriteLine(classifier);
 
             // Wait for user input before closing the console window...
             Console.ReadLine();
+<<<<<<< HEAD
             Console.ReadLine();
             Console.ReadLine();
+=======
+>>>>>>> bc95e715fe2846617ecdad54daa282f84d9fb508
         }
     }
 }

@@ -11,18 +11,18 @@ namespace FuzzySVM
 {
     class FuzzyProblemHelper
     {
-        struct temp
+        public struct temp
         {
+            public int answerId;
             public double type;
             public svm_node[] nodes;
         }
 
         private const int SAMPLE = 30;
 
-        public static svm_problem ReadProblem(string input_file_name, bool testing = true)
+        public static PersonalProblem ReadProblem(string input_file_name, out List<temp> nodes, bool testing = false)
         {
             var stuff = new List<temp>();
-            var nodes = new List<temp>();
 
             var vy = new List<double>();
             var vx = new List<svm_node[]>();
@@ -38,6 +38,7 @@ namespace FuzzySVM
                     temp tmp = new temp();
                     //vy.Add(testing ? atob(st[st.Length - 1]) : 0.0);
                     tmp.type = testing ? atob(st[st.Length - 1]) : 0.0;
+                    tmp.answerId = atoi(st[0]);
 
                     var m = (st.Count() - (testing ? 3 : 2));
                     var x = new List<svm_node>();
@@ -73,13 +74,14 @@ namespace FuzzySVM
 
             vy = nodes.Select(e => e.type).ToList();
             vx = nodes.Select(e => e.nodes).ToList();
+            var answers = nodes.Select(e => e.answerId).ToList();
 
-            var prob = new svm_problem {l = vy.Count, x = vx.ToArray(), y = vy.ToArray()};
+            var prob = new PersonalProblem {l = vy.Count, x = vx.ToArray(), y = vy.ToArray(), answerId = answers.ToArray()};
 
             return prob;
         }
 
-        public static svm_problem ScaleProblem(svm_problem prob, double lower = -1.0, double upper = 1.0)
+        public static PersonalProblem ScaleProblem(PersonalProblem prob, double lower = -1.0, double upper = 1.0)
         {
             var index_max = prob.x.Max(X => X.Max(e => e.index));
             var feature_max = new double[(index_max + 1)];
@@ -103,14 +105,16 @@ namespace FuzzySVM
                 }
             }
 
-            var scaledProb = new svm_problem();
+            var scaledProb = new PersonalProblem();
             scaledProb.l = n;
             scaledProb.y = prob.y.ToArray();
             scaledProb.x = new svm_node[n][];
+            scaledProb.answerId = new int[n];
             for (int i = 0; i < n; i++)
             {
                 var m = prob.x[i].Count();
                 scaledProb.x[i] = new svm_node[m];
+                scaledProb.answerId[i] = prob.answerId[i];
                 for (int j = 0; j < m; j++)
                 {
                     var index = prob.x[i][j].index;
@@ -129,12 +133,12 @@ namespace FuzzySVM
             return scaledProb;
         }
 
-        public static svm_problem ReadAndScaleProblem(string input_file_name, double lower = -1.0, double upper = 1.0, bool testing = true)
+        public static PersonalProblem ReadAndScaleProblem(string input_file_name, out List<temp> nodes, double lower = -1.0, double upper = 1.0, bool testing = true)
         {
-            return ScaleProblem(ReadProblem(input_file_name, testing), lower, upper);
+            return ScaleProblem(ReadProblem(input_file_name, out nodes, testing), lower, upper);
         }
 
-        public static void WriteProblem(string output_file_name, svm_problem problem)
+        public static void WriteProblem(string output_file_name, PersonalProblem problem)
         {
             using (StreamWriter sw = new StreamWriter(output_file_name))
             {
@@ -175,5 +179,10 @@ namespace FuzzySVM
             return Boolean.Parse(s) ? 1.0 : 0.0;
         }
         private static CultureInfo usCulture = new CultureInfo("en-US");
+    }
+
+    public class PersonalProblem : svm_problem
+    {
+        public int[] answerId;
     }
 }
