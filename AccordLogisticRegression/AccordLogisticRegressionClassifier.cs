@@ -11,11 +11,11 @@ namespace FuzzyLogic.TGMCProject.AccordLogisticRegression
 {
     public class AccordLogisticRegressionClassifier : IClassifier
     {
-        private static int ORACLE_SIZE = 48000; // # of records in each oracle
+        private static int ORACLE_SIZE = 80000; // # of records in each oracle
         private static int MAX_ORACLES = 16; // # of records in each oracle
 
-        private static double DELTA_THRESHOLD = 0.01;
-        private static int THRESHOLD_COUNT = 2;
+        private static double DELTA_THRESHOLD = 0.001;
+        private static int THRESHOLD_COUNT = 5; // How long the model should stabilize before calling it done
 
         public IDictionary<int, int> _oracleStatus = new Dictionary<int, int>();
 
@@ -62,7 +62,7 @@ namespace FuzzyLogic.TGMCProject.AccordLogisticRegression
                 if (isAbove)
                     _oracleStatus[oracleId]++;
 
-                return !isAbove || _oracleStatus.Any(pair => pair.Value < THRESHOLD_COUNT);
+                return isAbove || _oracleStatus.Any(pair => pair.Value < THRESHOLD_COUNT);
             }
         }
 

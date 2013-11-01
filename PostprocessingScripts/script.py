@@ -58,7 +58,7 @@ maxAnswerScores = []
 #answerScorer = lambda x: max(x)+(sum(x)/len(x))
 answerScorer = lambda x: sum(x[-2:]) / 2
 
-with open("../Results/AvgTop2PerAnswer-0.45.txt", "w") as fh:
+with open("../Results/AvgTop2PerAnswer-9.4-NORMALIZED.txt", "w") as fh:
 	for question in mp.keys():
 		ans = mp[question]
 		# Find the max for the question
@@ -67,13 +67,21 @@ with open("../Results/AvgTop2PerAnswer-0.45.txt", "w") as fh:
 		for answerId in ans.keys():
 			answers = ans[answerId]
 			answers.sort()
+
+			# Normalize the data
+			answers[0] = answers[0] / 0.019807465
+			answers[1] = answers[1] / 0.024667242
+			answers[2] = answers[2] / 0.028944629
+			answers[3] = answers[3] / 0.034828284
+			answers[4] = answers[4] / 0.057759703
+
 			if answerScorer(answers) > maxAnswer:
 				maxAnswerId = answerId
-				maxAnswer = max(answers)
+				maxAnswer = answerScorer(answers)
 
 		maxAnswerScores.append(maxAnswer)
 
-		if maxAnswer > 0.45:
-			fh.write("%d\n" % maxAnswerId)
+		if maxAnswer > 9.4:
+			fh.write("%d\n" % (maxAnswerId))
 
 print "Average Max Answer: %s" % (sum(maxAnswerScores) / len(maxAnswerScores))
