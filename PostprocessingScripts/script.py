@@ -59,7 +59,7 @@ answerScorer = lambda x: max(x)
 #answerScorer = lambda x: sum(x[-2:]) / 2
 
 
-with open("../Results/Threshold-0.35-SINGLEORACLE.txt", "w") as fh:
+with open("../Results/SINGLE-Threshold-0.35-SINGLEORACLE.txt", "w") as fh:
 	for question in mp.keys():
 		ans = mp[question]
 		# Find the max for the question
@@ -84,5 +84,14 @@ with open("../Results/Threshold-0.35-SINGLEORACLE.txt", "w") as fh:
 
 		if maxAnswer > 0.35:
 			fh.write("%d\n" % (maxAnswerId))
+
+with open("../Results/MULTI-Threshold-0.35-SINGLEORACLE.txt", "w") as fh:
+	for question in mp.keys():
+		ans = mp[question]
+		# Find the top answers and add those
+		results = [answerId for answerId in ans.keys() if answerScorer(ans[answerId]) > 0.35]
+
+		for result in results:
+			fh.write("%d\n" % result)
 
 print "Average Max Answer: %s" % (sum(maxAnswerScores) / len(maxAnswerScores))
