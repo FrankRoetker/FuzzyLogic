@@ -6,6 +6,7 @@ using Accord.Statistics.Models.Regression;
 using Accord.Statistics.Models.Regression.Fitting;
 using FuzzyLogic.TGMCProject.Core;
 using System.IO;
+using System.Threading;
 
 namespace FuzzyLogic.TGMCProject.AccordLogisticRegression
 {
@@ -70,6 +71,9 @@ namespace FuzzyLogic.TGMCProject.AccordLogisticRegression
         {
             Console.WriteLine("reading training data...");
 
+            IList<double[]> correct = new List<double[]>();
+            IList<double[]> incorrect = new List<double[]>();
+
             IList<IList<double[]>> inputs = new List<IList<double[]>>();
             IList<IList<double[]>> outputs = new List<IList<double[]>>();
             IList<Task<LogisticRegression>> tasks = new List<Task<LogisticRegression>>();
@@ -105,7 +109,7 @@ namespace FuzzyLogic.TGMCProject.AccordLogisticRegression
             correct.Shuffle();
             incorrect.Shuffle();
 
-            int numOracles = (correct.Count + incorrect.Count) / ORACLE_SIZE;
+            int numOracles = (int)Math.Ceiling((double)(correct.Count + incorrect.Count) / ORACLE_SIZE);
             if (numOracles > MAX_ORACLES)
             {
                 numOracles = MAX_ORACLES;
@@ -116,7 +120,7 @@ namespace FuzzyLogic.TGMCProject.AccordLogisticRegression
 
             if (numIncorrectPerOracle > ORACLE_SIZE)
             {
-                numIncorrectPerOracle = ORACLE_SIZE;
+                numIncorrectPerOracle = ORACLE_SIZE - numCorrectPerOracle;
             }
 
             int currentOracle = 0;
@@ -140,8 +144,10 @@ namespace FuzzyLogic.TGMCProject.AccordLogisticRegression
                 }
 
                 inputs[currentOracle].Add(row);
+                outputs[currentOracle].Add(new[] { 1.0 });
             }
 
+            currentOracle = 0;
             count = 0;
 
             // Evenly distribute incorrect answers
@@ -158,60 +164,15 @@ namespace FuzzyLogic.TGMCProject.AccordLogisticRegression
                     }
                 }
 
-                outputs[currentOracle].Add(row);
+                inputs[currentOracle].Add(row);
+                outputs[currentOracle].Add(new[] { 0.0 });
             }
 
             // Start the Oracles
             for (var i = 0; i < numOracles; i++)
             {
-                tasks.Add(i, reader.NumberColumns - 3, inputs[i], outputs[i]);
+                tasks.Add(StartOracle(i, reader.NumberColumns - 3, inputs[i], outputs[i]));
             }
-
-                //int count = 0;
-                //int currentOracle = 0;
-
-                //while (reader.NextRecord())
-                //{
-                //    if (count++ > ORACLE_SIZE)
-                //    {
-                //        if (currentOracle + 1 >= MAX_ORACLES)
-                //        {
-                //            break;
-                //        }
-
-                //        inputs.Add(new List<double[]>(ORACLE_SIZE));
-                //        outputs.Add(new List<double[]>(ORACLE_SIZE));
-
-                //        currentOracle++;
-                //        count = 0;
-
-                //        Console.WriteLine("Finished reading for oracle {0}; starting reading for oracle {1}", currentOracle - 1,
-                //            currentOracle);
-
-                //        // Start the oracle
-                //        tasks.Add(StartOracle(currentOracle - 1, reader.NumberColumns - 3, inputs[currentOracle - 1], outputs[currentOracle - 1]));
-                //    }
-
-                //    // Read the data in for the oracle
-                //    float questionId, answerId;
-                //    IList<double> features;
-                //    bool isCorrect;
-
-                //    if (!reader.GetTGMCRow(true, out questionId, out answerId, out features,
-                //        out isCorrect))
-                //    {
-                //        Console.Out.WriteLine("Didn't read row correctly! :(");
-                //        continue;
-                //    }
-
-                //    inputs[currentOracle].Add(features.ToArray());
-                //    outputs[currentOracle].Add(new[] { isCorrect ? 1.0 : 0.0 });
-                //}
-
-                //Console.Out.WriteLine("Finished reading for oracle {0}", currentOracle - 1);
-
-                //// Start the last oracle
-                //tasks.Add(StartOracle(currentOracle, reader.NumberColumns - 3, inputs[currentOracle], outputs[currentOracle]));
 
             // Wait for all the tasks
             Task.WaitAll(tasks.ToArray());
