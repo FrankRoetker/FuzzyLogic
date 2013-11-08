@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FuzzyLogic.TGMCProject.AccordLogisticRegression;
-using FuzzyLogic.TGMCProject.AccordSVM;
+//using FuzzyLogic.TGMCProject.AccordSVM;
 using FuzzyLogic.TGMCProject.Core;
 using FuzzyLogic.TGMCProject.LogisticRegression;
 using FuzzyLogic.TGMCProject.FuzzySVM;
@@ -34,7 +34,7 @@ namespace FuzzyLogic.TGMCProject
 
 
             // Now, use the training data to classify the evaluation set
-            var evaluationRead = new StreamCSVReader(new FileStream("..\\..\\..\\Datasets\\tgmcevaluation.csv", FileMode.Open), enableQuotes: false);
+            var evaluationRead = new StreamCSVReader(new FileStream("..\\..\\..\\Datasets\\tgmcholdback.csv", FileMode.Open), enableQuotes: false);
 
 
             // Read in the evaluation set

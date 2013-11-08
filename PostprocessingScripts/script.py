@@ -8,7 +8,7 @@ results = []
 maxes = []
 mp = {}
 
-with open('../Results/RAW-11-05-12-37-45.txt') as csvFile:
+with open('../Results/RAW-11-05-11-43-32.txt') as csvFile:
 	reader = csv.reader(csvFile)
 	for row in reader:
 		questionId = float(row[0])
@@ -59,7 +59,7 @@ answerScorer = lambda x: max(x)
 #answerScorer = lambda x: sum(x[-2:]) / 2
 
 
-with open("../Results/SINGLE-Threshold-0.35-SINGLEORACLE.txt", "w") as fh:
+with open("../Results/SINGLE-Threshold-0.35-SINGLEORACLE-randomized.txt", "w") as fh:
 	for question in mp.keys():
 		ans = mp[question]
 		# Find the max for the question
@@ -85,7 +85,7 @@ with open("../Results/SINGLE-Threshold-0.35-SINGLEORACLE.txt", "w") as fh:
 		if maxAnswer > 0.35:
 			fh.write("%d\n" % (maxAnswerId))
 
-with open("../Results/MULTI-Threshold-0.35-SINGLEORACLE.txt", "w") as fh:
+with open("../Results/MULTI-Threshold-0.35-SINGLEORACLE-randomized.txt", "w") as fh:
 	for question in mp.keys():
 		ans = mp[question]
 		# Find the top answers and add those
